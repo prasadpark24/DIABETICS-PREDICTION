@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetic Retinopathy Detection</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-eye"></i> Diabetic Retinopathy Detection</h1>
+            <p>AI-Powered Medical Diagnosis System</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Introduction Card -->
+            <div class="intro-card">
+                <h2><i class="fas fa-info-circle"></i> About This System</h2>
+                <p>This system uses machine learning to analyze retinal features and detect signs of diabetic retinopathy. 
+                   Enter the retinal analysis parameters below to get an instant prediction.</p>
+                <div class="features-info">
+                    <div class="feature-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Mean Intensity: Average pixel brightness (80-220)</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Std Intensity: Brightness variation (5-60)</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-border-all"></i>
+                        <span>Edge Count: Detected edges (1000-6500)</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-project-diagram"></i>
+                        <span>Vessel Density: Blood vessel density (0.0-1.0)</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Lesion Score: Abnormality indicator (0.0-1.0)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prediction Form Card -->
+            <div class="prediction-card">
+                <h2><i class="fas fa-microscope"></i> Retinal Analysis Input</h2>
+                
+                <!-- Loading Spinner (hidden by default) -->
+                <div id="loading" class="loading hidden">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Analyzing retinal features...</span>
+                </div>
+
+                <!-- Prediction Form -->
+                <form id="predictionForm" class="prediction-form">
+                    <div class="form-grid">
+                        <!-- Mean Intensity Input -->
+                        <div class="input-group">
+                            <label for="meanIntensity">
+                                <i class="fas fa-chart-line"></i>
+                                Mean Intensity
+                            </label>
+                            <input 
+                                type="number" 
+                                id="meanIntensity" 
+                                name="mean_intensity" 
+                                step="0.01" 
+                                min="0" 
+                                max="300" 
+                                required
+                                placeholder="e.g., 150.5"
+                            >
+                            <small>Average pixel intensity (80-220)</small>
+                        </div>
+
+                        <!-- Standard Deviation Intensity Input -->
+                        <div class="input-group">
+                            <label for="stdIntensity">
+                                <i class="fas fa-chart-bar"></i>
+                                Std Intensity
+                            </label>
+                            <input 
+                                type="number" 
+                                id="stdIntensity" 
+                                name="std_intensity" 
+                                step="0.01" 
+                                min="0" 
+                                max="100" 
+                                required
+                                placeholder="e.g., 25.3"
+                            >
+                            <small>Standard deviation of intensity (5-60)</small>
+                        </div>
+
+                        <!-- Edge Count Input -->
+                        <div class="input-group">
+                            <label for="edgeCount">
+                                <i class="fas fa-border-all"></i>
+                                Edge Count
+                            </label>
+                            <input 
+                                type="number" 
+                                id="edgeCount" 
+                                name="edge_count" 
+                                step="0.01" 
+                                min="0" 
+                                max="10000" 
+                                required
+                                placeholder="e.g., 3500"
+                            >
+                            <small>Number of detected edges (1000-6500)</small>
+                        </div>
+
+                        <!-- Vessel Density Input -->
+                        <div class="input-group">
+                            <label for="vesselDensity">
+                                <i class="fas fa-project-diagram"></i>
+                                Vessel Density
+                            </label>
+                            <input 
+                                type="number" 
+                                id="vesselDensity" 
+                                name="vessel_density" 
+                                step="0.01" 
+                                min="0" 
+                                max="1" 
+                                required
+                                placeholder="e.g., 0.35"
+                            >
+                            <small>Blood vessel density (0.0-1.0)</small>
+                        </div>
+
+                        <!-- Lesion Score Input -->
+                        <div class="input-group">
+                            <label for="lesionScore">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Lesion Score
+                            </label>
+                            <input 
+                                type="number" 
+                                id="lesionScore" 
+                                name="lesion_score" 
+                                step="0.01" 
+                                min="0" 
+                                max="1" 
+                                required
+                                placeholder="e.g., 0.45"
+                            >
+                            <small>Lesion presence score (0.0-1.0)</small>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="button-container">
+                        <button type="submit" class="predict-btn">
+                            <i class="fas fa-search"></i>
+                            Predict Retinopathy
+                        </button>
+                        <button type="button" id="clearBtn" class="clear-btn">
+                            <i class="fas fa-eraser"></i>
+                            Clear Form
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Sample Data Buttons -->
+                <div class="sample-data">
+                    <h3><i class="fas fa-flask"></i> Try Sample Data</h3>
+                    <div class="sample-buttons">
+                        <button type="button" class="sample-btn normal" onclick="loadSampleData('normal')">
+                            <i class="fas fa-check-circle"></i>
+                            Normal Sample
+                        </button>
+                        <button type="button" class="sample-btn diabetic" onclick="loadSampleData('diabetic')">
+                            <i class="fas fa-exclamation-circle"></i>
+                            Diabetic Sample
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Card -->
+            <div id="resultsCard" class="results-card hidden">
+                <h2><i class="fas fa-clipboard-check"></i> Prediction Results</h2>
+                
+                <!-- Prediction Result -->
+                <div id="predictionResult" class="prediction-result">
+                    <!-- Results will be populated by JavaScript -->
+                </div>
+
+                <!-- Confidence Score -->
+                <div id="confidenceScore" class="confidence-score">
+                    <!-- Confidence will be populated by JavaScript -->
+                </div>
+
+                <!-- Input Summary -->
+                <div id="inputSummary" class="input-summary">
+                    <h3><i class="fas fa-list"></i> Input Features Used</h3>
+                    <div id="featuresList" class="features-list">
+                        <!-- Features will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Medical Disclaimer -->
+                <div class="medical-disclaimer">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Medical Disclaimer:</strong> This is an AI prediction tool for educational purposes. 
+                    Always consult with qualified medical professionals for actual diagnosis and treatment.
+                </div>
+            </div>
+
+            <!-- Error Card -->
+            <div id="errorCard" class="error-card hidden">
+                <h2><i class="fas fa-exclamation-triangle"></i> Error</h2>
+                <div id="errorMessage" class="error-message">
+                    <!-- Error message will be populated by JavaScript -->
+                </div>
+                <button onclick="hideError()" class="error-close-btn">
+                    <i class="fas fa-times"></i>
+                    Close
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Diabetic Retinopathy Detection System | 
+               Built with FastAPI & Machine Learning | 
+               <i class="fas fa-graduation-cap"></i> College Project</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
